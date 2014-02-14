@@ -1,2 +1,2 @@
-Flappy-bot-image
+Flappy bot image
 ================
