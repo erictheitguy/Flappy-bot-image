@@ -12,15 +12,15 @@ if vc.isOpened(): # try to get the first frame
 else:
     rval = False
 
-img2 = cv2.imread('flappybird-logo.png',0) #loaded image as gray
-img1 = frame # trainImage
-gray_img = cv2.cvtColor(img1,cv2.COLOR_BGR2GRAY)
+train_image = cv2.imread('flappybird-logo.png',0) #loaded image as gray
+img1 = frame # video image
+gray_img = cv2.cvtColor(img1,cv2.COLOR_BGR2GRAY) #convert video to gray
 # Initiate SIFT detector
 sift = cv2.SIFT()
 
 # find the keypoints and descriptors with SIFT
 kp1, des1 = sift.detectAndCompute(gray_img,None)
-kp2, des2 = sift.detectAndCompute(img2,None)
+kp2, des2 = sift.detectAndCompute(train_image,None) # we really only need this once
 
 FLANN_INDEX_KDTREE = 0
 index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
@@ -50,7 +50,7 @@ if len(good)>MIN_MATCH_COUNT:
     pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
     dst = cv2.perspectiveTransform(pts,M)
 
-    img2 = cv2.polylines(img2,[np.int32(dst)],True,255,3, cv2.LINE_AA)
+    img1 = cv2.polylines(img1,[np.int32(dst)],True,255,3, cv2.LINE_AA)
 
 else:
     print "Not enough matches are found - %d/%d" % (len(good),MIN_MATCH_COUNT)
@@ -60,7 +60,7 @@ draw_params = dict(matchColor = (0,255,0), # draw matches in green color
                    matchesMask = matchesMask, # draw only inliers
                    flags = 2)
 
-img3 = cv2.drawMatches(img1,kp1,img2,kp2,good,None,**draw_params)
+img3 = cv2.drawMatches(img1,kp1,train_image,kp2,good,None,**draw_params)
 good_M = M
 good_mask = mask
 while rval:
@@ -73,7 +73,7 @@ while rval:
 
     # find the keypoints and descriptors with SIFT
     kp1, des1 = sift.detectAndCompute(gray_img,None)
-    kp2, des2 = sift.detectAndCompute(img2,None)
+
 
     FLANN_INDEX_KDTREE = 0
     index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
@@ -105,11 +105,11 @@ while rval:
             matchesMask = mask.ravel().tolist()
             good_M = M
             good_mask = mask
-        h,w = img2.shape
+        h,w = gray_img.shape
         pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
         dst = cv2.perspectiveTransform(pts,M)
 
-        img1 = cv2.polylines(img1,[np.int32(dst)],True,255,3, cv2.LINE_AA)
+        img1 = cv2.polylines(img1,[np.int32(dst)],True,255,15, cv2.LINE_AA)
         print "Enough matches are found - %d/%d" % (len(good),MIN_MATCH_COUNT)
         #we would then call the next routine to start the game
         #now we have to look for the ready screen
@@ -120,7 +120,7 @@ while rval:
                        singlePointColor = None,
                        matchesMask = matchesMask, # draw only inliers
                        flags = 2)
-    img3 = cv2.drawMatches(img1,kp1,img2,kp2,good,None,**draw_params)
+    img3 = cv2.drawMatches(img1,kp1,train_image,kp2,good,None,**draw_params)
     key = cv2.waitKey(20)
     if key == 27: # exit on ESC
         break
