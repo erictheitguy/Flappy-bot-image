@@ -5,6 +5,8 @@ from matplotlib import pyplot as plt
 img1 = cv2.imread('..\\sample-images\\mainmenu.PNG',0)          # queryImage
 img2 = cv2.imread('..\\sample-images\\flappybird-logo.png',0) # trainImage
 
+vc = cv2.VideoCapture(0)
+
 # Initiate SIFT detector
 sift = cv2.SIFT()
 
@@ -33,7 +35,10 @@ draw_params = dict(matchColor = (0,255,0),
                    singlePointColor = (255,0,0),
                    matchesMask = matchesMask,
                    flags = 0)
-
+h,w = img1.shape
+#pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
+#M, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC,5.0)
+#dst = cv2.perspectiveTransform(pts,M)
 img3 = cv2.drawMatchesKnn(img1,kp1,img2,kp2,matches,None,**draw_params)
 
 plt.imshow(img3,),plt.show()
