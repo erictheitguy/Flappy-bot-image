@@ -56,10 +56,10 @@ if len(good)>MIN_MATCH_COUNT:
     #use match mask
 
     #need better method for initial var value
-    min_x = 1000000000000
-    min_y = 1000000000000
-    max_x = None
-    max_y = None
+    min_x = 1000000000
+    min_y = 1000000000
+    max_x = 0
+    max_y = 0
     matchmask_idx = 0 # bad var name
     for xy_pts in src_pts:
         if matchesMask[matchmask_idx] == 1:
@@ -70,10 +70,19 @@ if len(good)>MIN_MATCH_COUNT:
             y_pts = xy_pts[0,1]
             x_pts = int(x_pts)
             y_pts = int(y_pts)
-            max_x, discard_x = [max(x, 0) for x in [x_pts,max_x]]
-            min_x, discard_x = [min(x, 1000000000) for x in [x_pts,min_x]]
-            max_y, discard_y = [max(x, 0) for x in [y_pts,max_y]]
-            min_y, discard_y = [min(x, 1000000000) for x in [y_pts,min_y]]
+            if min_x > x_pts:
+                min_x = x_pts
+            if min_y > y_pts:
+                 min_y= y_pts
+            if max_x < x_pts:
+                 max_x = x_pts
+            if max_y < y_pts:
+                max_y = y_pts
+
+            #max_x, discard_x = [max(x,0) for x in [x_pts,max_x]]
+            #min_x, discard_x = [min(x, 1000000000) for x in [x_pts,min_x]]
+            #max_y, discard_y = [max(x, 0) for x in [y_pts,max_y]]
+            #min_y, discard_y = [min(x, 1000000000) for x in [y_pts,min_y]]
             #
 
             # we got values convert into bounding box
@@ -89,6 +98,7 @@ if len(good)>MIN_MATCH_COUNT:
         #    y_pts = int(y_pts)
     top_left = (min_x, min_y)
     bottom_right = (max_x, max_y)
+    print top_left,bottom_right
     cv2.rectangle(img1,top_left, bottom_right, 255, -1)
         #print x_pts
         #print y_pts
