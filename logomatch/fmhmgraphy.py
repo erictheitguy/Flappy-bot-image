@@ -109,12 +109,42 @@ while rval:
         pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
         dst = cv2.perspectiveTransform(pts,M)
 
-        img1 = cv2.polylines(img1,[np.int32(dst)],True,255,15, cv2.LINE_AA)
-        print "Enough matches are found - %d/%d" % (len(good),MIN_MATCH_COUNT)
+        #img1 = cv2.polylines(img1,[np.int32(dst)],True,255,15, cv2.LINE_AA)
+        min_x = 1000000000
+        min_y = 1000000000
+        max_x = 0
+        max_y = 0
+        matchmask_idx = 0 # bad var name
+        for xy_pts in src_pts:
+            if matchesMask[matchmask_idx] == 1:
+                #print "draw point"
+
+                #print xy_pts
+                x_pts = xy_pts[0,0]
+                y_pts = xy_pts[0,1]
+                x_pts = int(x_pts)
+                y_pts = int(y_pts)
+                if min_x > x_pts:
+                    min_x = x_pts
+                if min_y > y_pts:
+                    min_y= y_pts
+                if max_x < x_pts:
+                    max_x = x_pts
+                if max_y < y_pts:
+                    max_y = y_pts
+            matchmask_idx += 1 # next value
+
+
+
+        top_left = (min_x, min_y)
+        bottom_right = (max_x, max_y)
+        #print top_left,bottom_right
+        cv2.rectangle(img1,top_left, bottom_right, 255, -1)
+        #print "Enough matches are found - %d/%d" % (len(good),MIN_MATCH_COUNT)
         #we would then call the next routine to start the game
         #now we have to look for the ready screen
     else:
-        print "Not enough matches are found - %d/%d" % (len(good),MIN_MATCH_COUNT)
+        #print "Not enough matches are found - %d/%d" % (len(good),MIN_MATCH_COUNT)
         matchesMask = None
     draw_params = dict(matchColor = (0,255,0), # draw matches in green color
                        singlePointColor = None,
