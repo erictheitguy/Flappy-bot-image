@@ -26,26 +26,14 @@ matches = flann.knnMatch(des1,des2,k=2)
 
 # store all the good matches as per Lowe's ratio test.
 good = []
-avg_x = None # probably not the best
-avg_y = None # ditto
+
 for m,n in matches:
     if m.distance < 0.7*n.distance:
         good.append(m)
 if len(good)>MIN_MATCH_COUNT:
     src_pts = np.float32([ kp1[m.queryIdx].pt for m in good ]).reshape(-1,1,2)
     dst_pts = np.float32([ kp2[m.trainIdx].pt for m in good ]).reshape(-1,1,2)
-    print np.std(src_pts)
-    std_dvt = np.std(src_pts)
-    print np.mean(src_pts)
-    mean_xy =  src_pts.mean(0)
-    print mean_xy
-    mx_pts = mean_xy[0,0]
-    my_pts = mean_xy[0,1]
-    mx_pts = int(mx_pts)
-    my_pts = int(my_pts)
-    top_left = (mx_pts + 20, my_pts + 20)
-    bottom_right = (top_left[0] - 30, top_left[1] - 30)
-    cv2.rectangle(img1,top_left, bottom_right, 0, -1)
+
 
     M, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC,5.0)
     matchesMask = mask.ravel().tolist()
@@ -79,23 +67,11 @@ if len(good)>MIN_MATCH_COUNT:
             if max_y < y_pts:
                 max_y = y_pts
 
-            #max_x, discard_x = [max(x,0) for x in [x_pts,max_x]]
-            #min_x, discard_x = [min(x, 1000000000) for x in [x_pts,min_x]]
-            #max_y, discard_y = [max(x, 0) for x in [y_pts,max_y]]
-            #min_y, discard_y = [min(x, 1000000000) for x in [y_pts,min_y]]
-            #
 
-            # we got values convert into bounding box
-            top_left = (x_pts + 20, y_pts + 20)
-            bottom_right = (top_left[0] - 30, top_left[1] - 30)
-            #cv2.rectangle(img1,top_left, bottom_right, 255, -1)
         matchmask_idx += 1 # next value
 
 
-        #dist = math.hypot(mx_pts - x_pts, my_pts - y_pts)
-        #if dist < std_dvt:
-        #    x_pts = int(x_pts)
-        #    y_pts = int(y_pts)
+
     top_left = (min_x, min_y)
     bottom_right = (max_x, max_y)
     print top_left,bottom_right
