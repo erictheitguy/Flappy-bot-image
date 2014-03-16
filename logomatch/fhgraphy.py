@@ -7,7 +7,7 @@ import math
 MIN_MATCH_COUNT = 10
 
 img1 = cv2.imread('..\\sample-images\\mainmenu.PNG',0)          # queryImage
-img2 = cv2.imread('..\\sample-images\\flappybird-logo.png',0) # trainImage
+img2 = cv2.imread('..\\sample-images\\bird_level1.png',0) # trainImage
 
 # Initiate SIFT detector
 sift = cv2.SIFT()
@@ -16,9 +16,9 @@ sift = cv2.SIFT()
 kp1, des1 = sift.detectAndCompute(img1,None)
 kp2, des2 = sift.detectAndCompute(img2,None)
 
-FLANN_INDEX_KDTREE = 0
-index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
-search_params = dict(checks = 50)
+FLANN_INDEX_KDTREE = 5
+index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 50)
+search_params = dict(checks = 500)
 
 flann = cv2.FlannBasedMatcher(index_params, search_params)
 
