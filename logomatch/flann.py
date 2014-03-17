@@ -3,7 +3,7 @@ import cv2
 from matplotlib import pyplot as plt
 
 img1 = cv2.imread('..\\sample-images\\mainmenu.PNG',0)          # queryImage
-img2 = cv2.imread('..\\sample-images\\bird_level1.png',0) # trainImage
+img2 = cv2.imread('..\\sample-images\\neg26.jpg',0) # trainImage
 
 vc = cv2.VideoCapture(0)
 

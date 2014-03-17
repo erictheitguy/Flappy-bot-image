@@ -6,13 +6,14 @@ from matplotlib import pyplot as plt
 MIN_MATCH_COUNT = 10
 cv2.namedWindow("preview")
 vc = cv2.VideoCapture(0)
-
+vc.set(3,1280)
+vc.set(4,720)
 if vc.isOpened(): # try to get the first frame
     rval, frame = vc.read()
 else:
     rval = False
 
-train_image = cv2.imread('..\\sample-images\\bird_level1.png',0) #loaded image as gray
+train_image = cv2.imread('..\\sample-images\\neg26.jpg',0) #loaded image as gray
 img1 = frame # video image
 gray_img = cv2.cvtColor(img1,cv2.COLOR_BGR2GRAY) #convert video to gray
 # Initiate SIFT detector

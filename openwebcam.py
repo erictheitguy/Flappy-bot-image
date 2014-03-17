@@ -4,6 +4,8 @@ import cv2
 
 cv2.namedWindow("preview")
 vc = cv2.VideoCapture(0)
+vc.set(3,1280)
+vc.set(4,720)
 
 if vc.isOpened(): # try to get the first frame
     rval, frame = vc.read()
