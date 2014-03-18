@@ -10,6 +10,18 @@ vc = cv2.VideoCapture(0)
 # set camera resolution
 vc.set(3,1280)
 vc.set(4,720)
+print vc.get(10) #CV_CAP_PROP_BRIGHTNESS Brightness of the image (only for cameras).
+print vc.get(11) #CV_CAP_PROP_CONTRAST Contrast of the image (only for cameras).
+print vc.get(12) #CV_CAP_PROP_SATURATION Saturation of the image (only for cameras).
+print vc.get(13) #CV_CAP_PROP_HUE Hue of the image (only for cameras).
+print vc.get(14) #CV_CAP_PROP_GAIN Gain of the image (only for cameras).
+print vc.get(15) #CV_CAP_PROP_EXPOSURE Exposure (only for cameras).
+
+
+
+
+
+
 if vc.isOpened(): # try to get the first frame
     rval, frame = vc.read()
 else:
