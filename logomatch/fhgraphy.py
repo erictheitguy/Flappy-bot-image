@@ -6,8 +6,8 @@ import math
 
 MIN_MATCH_COUNT = 10
 
-img1 = cv2.imread('..\\sample-images\\mainmenu.PNG',0)          # queryImage
-img2 = cv2.imread('..\\sample-images\\neg26.jpg',0) # trainImage
+img1 = cv2.imread('capture2.jpg',0)          # queryImage
+img2 = cv2.imread('bird2.png',0) # trainImage
 
 # Initiate SIFT detector
 sift = cv2.SIFT()
@@ -36,9 +36,17 @@ if len(good)>MIN_MATCH_COUNT:
 
 
     M, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC,5.0)
-    matchesMask = mask.ravel().tolist()
-    print len(src_pts)
-    print len(matchesMask)
+    if mask is None:
+        print "we going to crash"
+        M, mask = cv2.findHomography(src_pts, dst_pts,0,5.0)
+        # lets reuse a last good mask
+        #mask = good_mask
+        #M = good_M
+        matchesMask = mask.ravel().tolist()
+    else:
+        matchesMask = mask.ravel().tolist()
+        good_M = M
+        good_mask = mask
 
     #matches mask has flag for each src_pts if 1 draw if 0 not draw
     #use match mask
